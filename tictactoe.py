@@ -23,9 +23,8 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    if len(actions(board)) % 2 == 0:
-        return O
-    return X
+    
+    return O if len(actions(board)) % 2 == 0 else X
 
 
 def actions(board):
@@ -71,6 +70,7 @@ def winner(board):
         return board[0][0]
     elif board[0][2] == board[1][1] == board[2][0]:
         return board[0][2]
+    return None
 
 
 def terminal(board):
@@ -103,18 +103,18 @@ def minimax(board):
         return None
     
     if player(board) == X:
-        return max(board)[1]
-    return min(board)[1]
+        return max_value(board)[1]
+    return min_value(board)[1]
 
 
-def min(board):
+def min_value(board):
     if terminal(board):
         return [utility(board), None]
     value = math.inf
     move = None
 
     for action in actions(board):
-        x, _ = max(result(board, action))
+        x, _ = max_value(result(board, action))
         if x < value:
             value, move = x, action
             if value == -1:
@@ -122,7 +122,7 @@ def min(board):
     return [value, move]
 
 
-def max(board):
+def max_value(board):
     if terminal(board):
         return [utility(board), None]
     
@@ -130,7 +130,7 @@ def max(board):
     move = None
 
     for action in actions(board):
-        x, _ = min(result(board, action))
+        x, _ = min_value(result(board, action))
 
         if x > value:
             value, move = x, action
